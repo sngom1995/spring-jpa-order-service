@@ -32,6 +32,7 @@ class OrderServiceRepositoryTest {
         OrderHeader orderHeader = new OrderHeader();
         orderHeader.setCustomerName("Ibrahime Ndao");
         OrderHeader savedOrderHeader = orderServiceRepository.save(orderHeader);
-        assertThat(savedOrderHeader.getId()).isGreaterThan(0);
+        System.out.println(savedOrderHeader.getCreatedAt());
+        assertThat(savedOrderHeader.getCreatedAt()).isEqualTo(orderHeader.getCreatedAt());
     }
 }

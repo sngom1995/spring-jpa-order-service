@@ -4,6 +4,7 @@ package sn.guru.springframework.orderservice.domain;
 import jakarta.persistence.*;
 
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -57,6 +58,17 @@ public class OrderHeader extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+
+    //private LocalDateTime lastUpdatedDate;
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 
     public OrderHeader() {
 

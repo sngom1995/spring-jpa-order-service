@@ -55,6 +55,9 @@ public class OrderHeader extends BaseEntity{
     @Embedded
     private Address billingAddress;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
     public OrderHeader() {
 
     }

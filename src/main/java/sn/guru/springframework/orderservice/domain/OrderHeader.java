@@ -1,23 +1,81 @@
 package sn.guru.springframework.orderservice.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
 
 import java.util.Objects;
 
+
+@AttributeOverrides(
+        {
+                @AttributeOverride(name="shippingAddress.address",
+                        column = @Column(name = "shipping_address")
+                )
+                ,
+                @AttributeOverride(name="shippingAddress.city",
+                        column = @Column(name = "shipping_city")
+                )
+                ,
+                @AttributeOverride(name="shippingAddress.state",
+                        column = @Column(name = "shipping_state")
+                )
+                ,
+                @AttributeOverride(name="shippingAddress.zipCode",
+                        column = @Column(name = "shipping_zip_code")
+                )
+                ,
+                @AttributeOverride(
+                        name="billingAddress.address",
+                        column = @Column(name = "billing_address")
+                )
+                ,
+                @AttributeOverride(name="billingAddress.city",
+                        column = @Column(name = "bill_to_city")
+                )
+                ,
+                @AttributeOverride(name="billingAddress.state",
+                        column = @Column(name = "bill_to_state")
+                )
+                ,
+                @AttributeOverride(name="billingAddress.zipCode",
+                        column = @Column(name = "bill_to_zip_code")
+                )
+        }
+)
 @Entity
 public class OrderHeader extends BaseEntity{
 
     private String customerName;
 
+
+    @Embedded
+    private Address shippingAddress;
+
+    @Embedded
+    private Address billingAddress;
+
     public OrderHeader() {
 
     }
 
-    public OrderHeader( String customerName) {
+    public Address getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(Address shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public OrderHeader(String customerName) {
         this.customerName = customerName;
     }
 
@@ -38,13 +96,18 @@ public class OrderHeader extends BaseEntity{
 
         OrderHeader that = (OrderHeader) o;
 
-        return Objects.equals(customerName, that.customerName);
+        if (!Objects.equals(customerName, that.customerName)) return false;
+        if (!Objects.equals(shippingAddress, that.shippingAddress))
+            return false;
+        return Objects.equals(billingAddress, that.billingAddress);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
         result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
+        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
+        result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
         return result;
     }
 

@@ -6,10 +6,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import sn.guru.springframework.orderservice.domain.OrderHeader;
+import sn.guru.springframework.orderservice.domain.OrderLine;
 import sn.guru.springframework.orderservice.repository.OrderServiceRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -21,6 +23,20 @@ class OrderServiceRepositoryTest {
 
     @Autowired
     OrderServiceRepository orderServiceRepository;
+
+    @Test
+    void testSaveOrderHeaderWithOrderLine() {
+        OrderHeader orderHeader = new OrderHeader();
+        orderHeader.setCustomerName("Ibrahime Ndao");
+        OrderLine orderLine = new OrderLine();
+        orderLine.setQuantityOrdered(10);
+        orderHeader.setOrderLines(Set.of(orderLine));
+        orderLine.setOrderHeader(orderHeader);
+        OrderHeader savedOrderHeader = orderServiceRepository.save(orderHeader);
+        orderServiceRepository.flush();
+
+        assertThat(savedOrderHeader.getOrderLines().size()).isEqualTo(1);
+    }
 
     @Test
     void testGetsAllOrders(){

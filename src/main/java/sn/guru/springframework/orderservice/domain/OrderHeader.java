@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 
 @AttributeOverrides(
@@ -60,8 +61,8 @@ public class OrderHeader extends BaseEntity{
     private OrderStatus status;
 
 
-    //private LocalDateTime lastUpdatedDate;
-
+    @OneToMany(mappedBy = "orderHeader",cascade = CascadeType.PERSIST)
+    private Set<OrderLine> orderLines;
     public OrderStatus getStatus() {
         return status;
     }
@@ -72,6 +73,14 @@ public class OrderHeader extends BaseEntity{
 
     public OrderHeader() {
 
+    }
+
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    public void setOrderLines(Set<OrderLine> orderLines) {
+        this.orderLines = orderLines;
     }
 
     public Address getShippingAddress() {
@@ -114,7 +123,10 @@ public class OrderHeader extends BaseEntity{
         if (!Objects.equals(customerName, that.customerName)) return false;
         if (!Objects.equals(shippingAddress, that.shippingAddress))
             return false;
-        return Objects.equals(billingAddress, that.billingAddress);
+        if (!Objects.equals(billingAddress, that.billingAddress))
+            return false;
+        if (status != that.status) return false;
+        return Objects.equals(orderLines, that.orderLines);
     }
 
     @Override
@@ -123,14 +135,19 @@ public class OrderHeader extends BaseEntity{
         result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
         result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
         result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (orderLines != null ? orderLines.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-
         return "OrderHeader{" +
                 "customerName='" + customerName + '\'' +
+                ", shippingAddress=" + shippingAddress +
+                ", billingAddress=" + billingAddress +
+                ", status=" + status +
+                ", orderLines=" + orderLines +
                 '}';
     }
 }

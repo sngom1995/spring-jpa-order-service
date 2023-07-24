@@ -2,6 +2,8 @@ package sn.guru.springframework.orderservice.domain;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,6 +19,16 @@ public abstract class BaseEntity {
     @Column(updatable = false)
     private Timestamp createdAt;
 
+    @UpdateTimestamp
+    private Timestamp lastModifiedDate;
+
+    public Timestamp getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Timestamp lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
     public Long getId() {
         return id;
@@ -42,13 +54,15 @@ public abstract class BaseEntity {
         BaseEntity that = (BaseEntity) o;
 
         if (!Objects.equals(id, that.id)) return false;
-        return Objects.equals(createdAt, that.createdAt);
+        if (!Objects.equals(createdAt, that.createdAt)) return false;
+        return Objects.equals(lastModifiedDate, that.lastModifiedDate);
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
+        result = 31 * result + (lastModifiedDate != null ? lastModifiedDate.hashCode() : 0);
         return result;
     }
 }

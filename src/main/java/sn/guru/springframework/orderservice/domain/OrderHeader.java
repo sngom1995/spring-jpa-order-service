@@ -66,6 +66,11 @@ public class OrderHeader extends BaseEntity{
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "approval_id")
+    private OrderApproval orderApproval;
+
     public OrderStatus getStatus() {
         return status;
     }

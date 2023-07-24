@@ -1,5 +1,6 @@
 package sn.guru.springframework.orderservice.repository;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,13 @@ import sn.guru.springframework.orderservice.repository.OrderServiceRepository;
 import sn.guru.springframework.orderservice.repository.ProductRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @DataJpaTest
@@ -44,6 +48,28 @@ class OrderServiceRepositoryTest {
         newProduct.setDescription("New Product");
         customer = customerRepository.saveAndFlush(newCustomer);
         product = productRepository.saveAndFlush(newProduct);
+    }
+
+    @Test
+    void testDeleteOrder() throws Exception {
+        OrderHeader orderHeader = new OrderHeader();
+        OrderLine orderLine = new OrderLine();
+        OrderApproval approval = new OrderApproval();
+        approval.setApprovedBy("me");
+        orderLine.setQuantityOrdered(10);
+        orderLine.setProduct(product);
+        orderHeader.setCustomer(customer);
+        orderHeader.setOrderApproval(approval);
+        orderHeader.addOrderLine(orderLine);
+        OrderHeader savedOrderHeader = orderServiceRepository.save(orderHeader);
+        orderServiceRepository.flush();
+        orderServiceRepository.delete(savedOrderHeader);
+        orderServiceRepository.flush();
+        assertThrows(NoSuchElementException.class,() -> {
+            Optional<OrderHeader> orderHeaderOptional = orderServiceRepository.findById(savedOrderHeader.getId());
+
+            assertNull(orderHeaderOptional.get());
+        });
     }
 
     @Test

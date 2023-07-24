@@ -49,8 +49,6 @@ public class OrderLine extends BaseEntity{
 
         if (!Objects.equals(quantityOrdered, orderLine.quantityOrdered))
             return false;
-        if (!Objects.equals(orderHeader, orderLine.orderHeader))
-            return false;
         return Objects.equals(product, orderLine.product);
     }
 

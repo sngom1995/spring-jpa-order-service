@@ -1,4 +1,4 @@
-package sn.guru.springframework.orderservice;
+package sn.guru.springframework.orderservice.repository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

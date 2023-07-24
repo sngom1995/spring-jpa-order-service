@@ -23,6 +23,14 @@ class ProductRepositoryTest {
     ProductRepository productRepository;
 
     @Test
+    void testGetProductByDescription() {
+        Product product = productRepository.findProductByDescription("PRODUCT1");
+
+        assertThat(product.getCategories().size()).isGreaterThan(0);
+        assertThat(product).isNotNull();
+    }
+
+    @Test
     void testSaveProduct() {
         Product product = new Product();
         product.setDescription("Test description");

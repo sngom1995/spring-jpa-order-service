@@ -49,9 +49,6 @@ import java.util.Set;
 @Entity
 public class OrderHeader extends BaseEntity{
 
-    private String customerName;
-
-
     @Embedded
     private Address shippingAddress;
 
@@ -64,6 +61,11 @@ public class OrderHeader extends BaseEntity{
 
     @OneToMany(mappedBy = "orderHeader",cascade = CascadeType.PERSIST)
     private Set<OrderLine> orderLines;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
+
     public OrderStatus getStatus() {
         return status;
     }
@@ -77,18 +79,6 @@ public class OrderHeader extends BaseEntity{
     }
     public void setStatus(OrderStatus status) {
         this.status = status;
-    }
-
-    public OrderHeader() {
-
-    }
-
-    public Set<OrderLine> getOrderLines() {
-        return orderLines;
-    }
-
-    public void setOrderLines(Set<OrderLine> orderLines) {
-        this.orderLines = orderLines;
     }
 
     public Address getShippingAddress() {
@@ -107,17 +97,20 @@ public class OrderHeader extends BaseEntity{
         this.billingAddress = billingAddress;
     }
 
-    public OrderHeader(String customerName) {
-        this.customerName = customerName;
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
     }
 
-
-    public String getCustomerName() {
-        return customerName;
+    public void setOrderLines(Set<OrderLine> orderLines) {
+        this.orderLines = orderLines;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     @Override
@@ -128,34 +121,23 @@ public class OrderHeader extends BaseEntity{
 
         OrderHeader that = (OrderHeader) o;
 
-        if (!Objects.equals(customerName, that.customerName)) return false;
         if (!Objects.equals(shippingAddress, that.shippingAddress))
             return false;
         if (!Objects.equals(billingAddress, that.billingAddress))
             return false;
         if (status != that.status) return false;
-        return Objects.equals(orderLines, that.orderLines);
+        if (!Objects.equals(orderLines, that.orderLines)) return false;
+        return Objects.equals(customer, that.customer);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (customerName != null ? customerName.hashCode() : 0);
         result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
         result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (orderLines != null ? orderLines.hashCode() : 0);
+        result = 31 * result + (customer != null ? customer.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "OrderHeader{" +
-                "customerName='" + customerName + '\'' +
-                ", shippingAddress=" + shippingAddress +
-                ", billingAddress=" + billingAddress +
-                ", status=" + status +
-                ", orderLines=" + orderLines +
-                '}';
     }
 }

@@ -48,8 +48,7 @@ class OrderServiceRepositoryTest {
         OrderLine orderLine = new OrderLine();
         orderLine.setQuantityOrdered(10);
         orderLine.setProduct(product);
-        orderHeader.setOrderLines(Set.of(orderLine));
-        orderLine.setOrderHeader(orderHeader);
+        orderHeader.addOrderLine(orderLine);
         OrderHeader savedOrderHeader = orderServiceRepository.save(orderHeader);
         orderServiceRepository.flush();
 

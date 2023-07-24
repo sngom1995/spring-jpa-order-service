@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -67,6 +68,13 @@ public class OrderHeader extends BaseEntity{
         return status;
     }
 
+    public void addOrderLine(OrderLine orderLine) {
+       if (orderLines == null) {
+           orderLines = new HashSet<>();
+       }
+       orderLines.add(orderLine);
+       orderLine.setOrderHeader(this);
+    }
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
